@@ -1,17 +1,12 @@
 import CommonLayout from "./CommonLayout";
 import LoginMain from "./pages/login/LoginMain";
+import { RecoilRoot } from "recoil";
 function App() {
-  const adminToken = sessionStorage.getItem('adminToken');
-
-  if(adminToken) {
-    return (
+  return (
+    <RecoilRoot>
       <CommonLayout></CommonLayout>
-    );
-  } else {
-    return (
-      <LoginMain></LoginMain>
-    );
-  }
+    </RecoilRoot>
+  );
 }
 
 export default App;
