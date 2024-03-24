@@ -1,11 +1,12 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
 import { isLoadingStateStore } from '../../store/commonStore';
 import { isLoginStateStore, userLoginStateStore } from '../../store/loginStore';
 import commonAxios from '../../module/commonAxios';
 
 function LoginMain() {
   const [userLoginState, setUserLoginState] = useRecoilState(userLoginStateStore);
+  const resetUserLoginState = useResetRecoilState(userLoginStateStore);
   const setIsLoadingState = useSetRecoilState(isLoadingStateStore);
   const setIsLoginState = useSetRecoilState(isLoginStateStore);
 
@@ -46,6 +47,7 @@ function LoginMain() {
       alert('로그인을 성공하였습니다');
       localStorage.setItem('adminToken', JSON.stringify(data));
       setIsLoginState(true);
+      resetUserLoginState();
     }
   };
 
