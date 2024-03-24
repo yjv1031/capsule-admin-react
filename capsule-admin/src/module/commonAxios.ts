@@ -2,7 +2,10 @@ import axios, { AxiosResponse } from "axios";
 
 const BACK_END_URL = process.env.REACT_APP_BACK_END_URL;
 
-const commonAxios = async (method: string, url: string, data?: any) => {
+const commonAxios = async (
+  method: string, url: string, data?: any, 
+  setIsLoadingState?: (param: boolean) => void,
+  setIsLoginState?: (param: boolean) => void) => {
   const headers: any = {};
   
   //퍼블릭한 서비스가 아닌경우 토큰포함
@@ -14,6 +17,10 @@ const commonAxios = async (method: string, url: string, data?: any) => {
         headers['Authorization'] = `Bearer ${adminToken.accessToken}`;
       }
     }
+  }
+
+  if(setIsLoadingState) {
+    setIsLoadingState(true);
   }
 
   try {
@@ -64,14 +71,22 @@ const commonAxios = async (method: string, url: string, data?: any) => {
             //로그인 비즈니스 전개
             localStorage.removeItem('adminToken');
             //리코일 상태값변경필요
+            if(setIsLoginState) {
+              setIsLoginState(false);
+            }
+            return null;
           }
-          
         }
       }
     }
 
     // 그 외 에러 처리
     alert('서버에러 입니다');
+    return null;
+  } finally {
+    if(setIsLoadingState) {
+      setIsLoadingState(false);
+    }
   }
 };
 

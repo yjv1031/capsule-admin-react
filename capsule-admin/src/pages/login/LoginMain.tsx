@@ -1,11 +1,13 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { isLoadingStateStore } from '../../store/commonStore';
 import { isLoginStateStore, userLoginStateStore } from '../../store/loginStore';
 import commonAxios from '../../module/commonAxios';
 
 function LoginMain() {
   const [userLoginState, setUserLoginState] = useRecoilState(userLoginStateStore);
-  const [isLoginState, setIsLoginState] = useRecoilState(isLoginStateStore);
+  const setIsLoadingState = useSetRecoilState(isLoadingStateStore);
+  const setIsLoginState = useSetRecoilState(isLoginStateStore);
 
   const loginIdChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     setUserLoginState({
@@ -39,7 +41,7 @@ function LoginMain() {
       password: loginPwd
     };
 
-    const data = await commonAxios('post', '/public/token/login', param);
+    const data = await commonAxios('post', '/public/token/login', param, setIsLoadingState, setIsLoginState);
     if(data) {
       alert('로그인을 성공하였습니다');
       localStorage.setItem('adminToken', JSON.stringify(data));
