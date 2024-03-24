@@ -26,6 +26,8 @@ html, body, #root, button {
   width: 600px;
   height: 400px;
   background-color: gainsboro;
+  border-radius: 20px;
+  box-shadow: 6px 7px 10px rgba(0, 0, 0, 0.1);
 }
 
 .login_main h1 {
