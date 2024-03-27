@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import { commonStateStore } from '../../store/commonStore';
 import { produce } from 'immer';
 
@@ -21,6 +21,12 @@ function LoginMain() {
       draft.loginPwd = e.target.value;
     }));
   };
+
+  const passwordKeyUpHandler = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.keyCode === 13) {
+      tryLogin();
+    }
+  }
 
   const tryLogin = async() => {
     const loginId: string = userLoginState.loginId;
@@ -57,7 +63,8 @@ function LoginMain() {
           <label htmlFor="adminLoginInput" className="login_label">아이디</label>
           <input type="text" id="adminLoginInput" className="login_input" value={userLoginState.loginId} onChange={loginIdChangeHandler}/>
           <label htmlFor="adminLoginPwd" className="login_label">패스워드</label>
-          <input type="password" id="adminLoginPwd" className="login_input" value={userLoginState.loginPwd} onChange={loginPwdChangeHandler}/>
+          <input type="password" id="adminLoginPwd" className="login_input" value={userLoginState.loginPwd} onChange={loginPwdChangeHandler}
+          onKeyUp={passwordKeyUpHandler}/>
         </section>
         <section className="login_section login_btn_area">
           <button className="login_access_btn" onClick={tryLogin}>로그인</button>

@@ -1,7 +1,11 @@
 import CommonLayout from "./CommonLayout";
+import Loading from "./component/common/Loading";
 function App() {
   return (
-    <CommonLayout></CommonLayout>
+    <>
+      <Loading></Loading>
+      <CommonLayout></CommonLayout>
+    </>
   );
 }
 
