@@ -1,27 +1,25 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import { useRecoilState, useSetRecoilState, useResetRecoilState } from 'recoil';
-import { isLoadingStateStore } from '../../store/commonStore';
-import { isLoginStateStore, userLoginStateStore } from '../../store/loginStore';
-import commonAxios from '../../module/commonAxios';
+import React, { useState, ChangeEvent } from 'react';
+import { commonStateStore } from '../../store/commonStore';
+import { produce } from 'immer';
+
+interface userLoginInputInterface {
+  loginId: string,
+  loginPwd: string
+}
 
 function LoginMain() {
-  const [userLoginState, setUserLoginState] = useRecoilState(userLoginStateStore);
-  const resetUserLoginState = useResetRecoilState(userLoginStateStore);
-  const setIsLoadingState = useSetRecoilState(isLoadingStateStore);
-  const setIsLoginState = useSetRecoilState(isLoginStateStore);
-
+  const [userLoginState, setUserLoginState] = useState<userLoginInputInterface>({loginId: '', loginPwd: ''});
+  const { commonAjaxWrapper } = commonStateStore();
   const loginIdChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserLoginState({
-      ...userLoginState,
-      loginId: e.target.value
-    });
+    setUserLoginState(produce(userLoginState, (draft) => {
+      draft.loginId = e.target.value;
+    }));
   };
 
   const loginPwdChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setUserLoginState({
-      ...userLoginState,
-      loginPwd: e.target.value
-    });
+    setUserLoginState(produce(userLoginState, (draft) => {
+      draft.loginPwd = e.target.value;
+    }));
   };
 
   const tryLogin = async() => {
@@ -42,12 +40,12 @@ function LoginMain() {
       password: loginPwd
     };
 
-    const data = await commonAxios('post', '/public/token/login', param, setIsLoadingState, setIsLoginState);
+    const data = await commonAjaxWrapper('post', '/public/token/login', param);
     if(data) {
       alert('로그인을 성공하였습니다');
       localStorage.setItem('adminToken', JSON.stringify(data));
-      setIsLoginState(true);
-      resetUserLoginState();
+      setUserLoginState({loginId: '', loginPwd: ''});
+      window.location.href = `${process.env.REACT_APP_CONTEXT_PATH}/`;
     }
   };
 
