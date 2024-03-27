@@ -6,7 +6,6 @@ import ImageMain from "./pages/image/ImageMain";
 import { useEffect, useState } from "react";
 
 function CommonLayout() {
-  const { isLoading } = commonStateStore();
   const [isLogin, setIsLogin] = useState<boolean>(false);
   useEffect(() => {
     const adminToken = localStorage.getItem('adminToken');
