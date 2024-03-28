@@ -4,9 +4,12 @@ import LoginMain from "./pages/login/LoginMain";
 import DashBoard from "./pages/dash_board/DashBoard";
 import ImageMain from "./pages/image/ImageMain";
 import { useEffect, useState } from "react";
+import router from "./module/router"; 
 
 function CommonLayout() {
   const [isLogin, setIsLogin] = useState<boolean>(false);
+  const { currentMenuKey } = commonStateStore();
+
   useEffect(() => {
     const adminToken = localStorage.getItem('adminToken');
 
@@ -26,21 +29,53 @@ function CommonLayout() {
   
   return (
     isLogin ? (
-      <div>
-        <button onClick={tryLogout}>로그아웃</button>
-        <ul>
-          <li>
-            <Link to={`${process.env.REACT_APP_CONTEXT_PATH}/`}>Dash Board</Link>
-          </li>
-          <li>
-            <Link to={`${process.env.REACT_APP_CONTEXT_PATH}/image`}>Image</Link>
-          </li>
-        </ul>
-        <Routes>
-          <Route path={`${process.env.REACT_APP_CONTEXT_PATH}/`} element={<DashBoard />} />
-          <Route path={`${process.env.REACT_APP_CONTEXT_PATH}/image`} element={<ImageMain />} />
-        </Routes>
-      </div>
+      <div className="wrap">
+        <div className="header_wrap">
+            <div className="logo_area"><h1><a className="">랜덤캡슐</a></h1></div>
+            <div className="menu_area">
+                <div className="menu_slide_wrap">
+                    <ul>
+                        {
+                          router.map((item) => {
+                            return (
+                              <li className={currentMenuKey == item.menuKey ? 'active' : ''}>
+                                <Link to={`${item.path}`}>{item.menu}</Link>
+                              </li>
+                            )
+                          })
+                        }
+                    </ul>
+                </div>
+            </div>
+        
+            <div className="util_area">
+                <div className="btn_admin btn_layer">
+                  <a onClick={tryLogout}>LOG OUT</a>
+                </div>
+            </div>
+        </div>
+        <div className="contents_wrap">
+          <Routes>
+            {
+              router.map((item) => {
+                return (
+                  <Route path={item.path} element={<item.element/>} />      
+                )
+              })
+            }
+          </Routes>
+        </div>
+        <div className="footer_wrap">
+            <div className="footer_left">Copyright © 2099-2099 TEST TEST TEST</div>
+            <div className="footer_right">
+                <ul>
+                    <li>IT-VOC</li>
+                    <li>User Manuals</li>
+                    <li>Contact Us</li>
+                </ul>
+            </div>
+        </div>
+    </div>
     ) : (
       <LoginMain></LoginMain>
     )
