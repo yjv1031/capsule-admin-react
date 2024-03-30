@@ -1,9 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { commonStateStore } from "../../store/commonStore";
-import { DataGrid, GridColDef, GridEditBooleanCell } from "@mui/x-data-grid";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Tooltip } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { produce } from "immer";
+import ImageSaveAlert from "./ImageSaveAlert";
 
 interface ImageMasterType {
     seq: number,
@@ -23,6 +24,7 @@ function ImageList() {
   const { setCurrentMenuKey, commonAjaxWrapper } = commonStateStore();
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [rows, setRows] = useState<ImageMasterType[]>([]);
+  const [alertFlag, setAlertFlag] = useState<boolean>(false);
 
   const searchKeywordChangehandler = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
@@ -164,7 +166,7 @@ function ImageList() {
         <div className="tabArea">
             <div className="tab-content" id="tabC01">
                 <div className="grid_btn_right_wrap">
-                    <a className="btn-blue">추가하기</a>
+                    <a className="btn-blue" onClick={() => {setAlertFlag(true);}}>추가하기</a>
                     <a className="btn-blue">삭제하기</a>
                 </div>
                 <div className="grid_area" style={{height: '600px'}}>
@@ -190,6 +192,9 @@ function ImageList() {
                 </div>
             </div>
         </div>
+        {
+            alertFlag ? (<ImageSaveAlert setAlertFlag={setAlertFlag}></ImageSaveAlert>) : ''
+        }
     </>
   );
 }

@@ -82,3 +82,37 @@ html, body, #root, button, .css-qcqlck-MuiDataGrid-root {
   width: 100%;
   background-color: aqua;
 }
+
+/* 딤 처리 스타일 */
+.dim-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 투명한 딤 처리 */
+  z-index: 999; /* 다른 요소 위에 표시 */
+}
+
+/* 레이어 알럿 스타일 */
+.layer-alert {
+  position: fixed;
+  top: 50%; /* 화면 세로 중앙으로 이동 */
+  left: 50%; /* 화면 가로 중앙으로 이동 */
+  transform: translate(-50%, -50%); /* 화면 중앙 정렬 */
+  width: 1500px; /* 가로 크기 */
+  height: 700px; /* 세로 크기 */
+  background-color: #fff;
+  border: 1px solid #ccc;
+  /* border-radius: 10px; */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* 그림자 효과 */
+  z-index: 1000; /* 다른 요소 위에 표시 */
+  /* padding: 20px; */
+}
+
+.popup_grid_area {
+  width:100%; 
+  /* height:100%;  */
+  border:1px solid #e6e7e8; 
+  /* margin-top:10px; */
+}

@@ -4,8 +4,14 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { Checkbox } from '@mui/material';
 import { produce } from 'immer';
+import { commonStateStore } from '../../store/commonStore';
 
 export default function DataGridDemo() {
+  const { setCurrentMenuKey } = commonStateStore();
+  React.useEffect(() => {
+    setCurrentMenuKey(1);
+  },[]);
+  
     const [rows, setRows] = React.useState([
         { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14, checked: false },
         { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31, checked: true },
