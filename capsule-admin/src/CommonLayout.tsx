@@ -38,7 +38,7 @@ function CommonLayout() {
                         {
                           router.map((item) => {
                             return (
-                              <li className={currentMenuKey == item.menuKey ? 'active' : ''}>
+                              <li key={item.menuKey} className={currentMenuKey == item.menuKey ? 'active' : ''}>
                                 <Link to={`${item.path}`}>{item.menu}</Link>
                               </li>
                             )
@@ -59,7 +59,7 @@ function CommonLayout() {
             {
               router.map((item) => {
                 return (
-                  <Route path={item.path} element={<item.element/>} />      
+                  <Route key={item.menuKey} path={item.path} element={<item.element/>} />      
                 )
               })
             }

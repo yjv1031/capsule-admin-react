@@ -1,57 +1,90 @@
-import { useEffect } from "react";
-import { commonStateStore } from "../../store/commonStore";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { StyledEngineProvider } from '@mui/material/styles';
+import { Checkbox } from '@mui/material';
+import { produce } from 'immer';
 
-function DashBoard() {
-    const { setCurrentMenuKey } = commonStateStore();
-    useEffect(() => {
-        setCurrentMenuKey(1);
-    },[]);
-    return (
-        <>
-            <h2 className="subtitle">대시보드</h2>
-            <div className="srch_wrap">
-                <ul>
-                    <li>
-                        <label>Option Title01</label>
-                        <input className="inp-text" type="text" placeholder="기본입력필드" value=""/>
-                    </li>
-                    <li>
-                        <label>Option Title02</label>
-                        <div className="type-selectbox" style={{width: '95%'}}>
-                            <select className="inp-selectbox">
-                                <option>Option01</option>
-                                <option>Option02</option>
-                                <option>Option03</option>
-                                <option>Option04</option>
-                                <option>Option05</option>
-                            </select>
-                        </div>
-                    </li>
-                    <li>
-                        <label>Option Title03</label>
-                        <input className="inp-text" type="text" placeholder="기본입력필드" value=""/>
-                    </li>
-                </ul>
-                <div className="btnArea">
-                    <button className="btn-reset">Reset</button>
-                    <button className="btn-srch">Search</button>
-                </div>
-            </div>
-            <div className="tabArea">
-                <div className="tab-content" id="tabC01">
-                    <div className="grid_btn_right_wrap">
-                        <a className="btn-blue">추가하기</a>
-                        <a className="btn-blue">삭제하기</a>
-                        <a className="btn-blue">조회하기</a>
-                        <a className="btn-blue">Button</a>
-                    </div>
-                    <div className="grid_area" style={{height: '600px'}}>
-                        
-                    </div>
-                </div>
-            </div>
-        </>
-    );
+export default function DataGridDemo() {
+    const [rows, setRows] = React.useState([
+        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 14, checked: false },
+        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 31, checked: true },
+        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 31, checked: true },
+        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 11, checked: false },
+        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null, checked: false },
+        { id: 6, lastName: 'Melisandre', firstName: null, age: 150, checked: false },
+        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44, checked: false },
+        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36, checked: false },
+        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65, checked: false },
+    ]);
+    
+    const columns: GridColDef<(typeof rows)[number]>[] = [
+        { field: 'id', headerName: 'ID', width: 90 },
+        {
+          field: 'checked',
+          headerName: 'First name',
+          width: 150,
+          editable: false,
+          renderCell: (param) => {
+            
+            return (
+                <Checkbox checked={param.row.checked}
+                    onClick={() => {
+                        const newRows = produce(rows, (draft => {
+                            const row = draft.find(item => item.id == param.row.id);
+                            if(row) {
+                                row.checked = !row.checked;
+                            }
+                        }));
+                        setRows(newRows);
+                    }}
+                />
+            );
+          }
+        },
+        {
+          field: 'lastName',
+          headerName: 'Last name',
+          width: 150,
+          editable: true,
+        },
+        {
+          field: 'age',
+          headerName: 'Age',
+          type: 'number',
+          width: 110,
+          editable: true,
+        },
+        {
+          field: 'fullName',
+          headerName: 'Full name',
+          description: 'This column has a value getter and is not sortable.',
+          sortable: false,
+          width: 160,
+          valueGetter: (value, row) => `${row.firstName || ''} ${row.lastName || ''}`,
+        },
+      ];
+
+  return (
+    <>
+        <StyledEngineProvider injectFirst>
+            <Box sx={{ height: 400, width: '100%' }}>
+                <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    initialState={{
+                    pagination: {
+                        paginationModel: {
+                        pageSize: 5,
+                        },
+                    },
+                    }}
+                    pageSizeOptions={[5]}
+                    // checkboxSelection
+                    disableRowSelectionOnClick
+                />
+            </Box>
+        </StyledEngineProvider>
+    </>
+  );
 }
-
-export default DashBoard;

@@ -30,10 +30,7 @@ const commonAxios = async (
       return null;
     }
 
-    return res.data.data;
-  } catch (error: any) {
-    //엑세스토큰 재갱신
-    if (!url.startsWith('/public/') && error.response && (error.response.status === 401 || error.response.status === 403)) {
+    if (res.data.status.code === -1) {
       const adminTokenStr = localStorage.getItem('adminToken');
       if(adminTokenStr) {
         const adminToken = JSON.parse(adminTokenStr);
@@ -42,8 +39,9 @@ const commonAxios = async (
             const refreshResponse = await axios.post(`${BACK_END_URL}/public/token/refresh`, {
               refreshToken: adminToken.refreshToken
             });
+            debugger;
             if(refreshResponse.data.status.code === 1) {
-              const serverToken = refreshResponse.data.res.data;
+              const serverToken = refreshResponse.data.data;
               localStorage.setItem('adminToken', JSON.stringify(serverToken));
               // 헤더에 새로운 액세스 토큰 추가
               headers['Authorization'] = `Bearer ${serverToken.accessToken}`;
@@ -55,7 +53,12 @@ const commonAxios = async (
                 data: data,
                 headers: headers
               });
-  
+
+              if (retryResponse.data.status.code === 0) {
+                alert(retryResponse.data.status.message);
+                return null;
+              }
+            
               return retryResponse.data.data;
             } else {
               throw new Error();
@@ -67,10 +70,24 @@ const commonAxios = async (
             window.location.href = `${process.env.REACT_APP_CONTEXT_PATH}/`;
             return null;
           }
+        } else {
+          alert('재 로그인이 필요합니다');
+          //로그인 비즈니스 전개
+          localStorage.removeItem('adminToken');
+          window.location.href = `${process.env.REACT_APP_CONTEXT_PATH}/`;
+          return null;
         }
+      } else {
+        alert('재 로그인이 필요합니다');
+        //로그인 비즈니스 전개
+        localStorage.removeItem('adminToken');
+        window.location.href = `${process.env.REACT_APP_CONTEXT_PATH}/`;
+        return null;
       }
     }
 
+    return res.data.data;
+  } catch (error: any) {
     // 그 외 에러 처리
     alert('서버에러 입니다');
     return null;
