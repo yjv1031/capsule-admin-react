@@ -39,7 +39,6 @@ const commonAxios = async (
             const refreshResponse = await axios.post(`${BACK_END_URL}/public/token/refresh`, {
               refreshToken: adminToken.refreshToken
             });
-            debugger;
             if(refreshResponse.data.status.code === 1) {
               const serverToken = refreshResponse.data.data;
               localStorage.setItem('adminToken', JSON.stringify(serverToken));
