@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "/capsule-admin-react/static/js/main.6f43c896.js",
-    "static/js/453.418ce0dc.chunk.js": "/capsule-admin-react/static/js/453.418ce0dc.chunk.js",
+    "main.js": "/capsule-admin-react/static/js/main.45be8e6e.js",
+    "static/js/453.5b29c436.chunk.js": "/capsule-admin-react/static/js/453.5b29c436.chunk.js",
     "index.html": "/capsule-admin-react/index.html",
-    "main.6f43c896.js.map": "/capsule-admin-react/static/js/main.6f43c896.js.map",
-    "453.418ce0dc.chunk.js.map": "/capsule-admin-react/static/js/453.418ce0dc.chunk.js.map"
+    "main.45be8e6e.js.map": "/capsule-admin-react/static/js/main.45be8e6e.js.map",
+    "453.5b29c436.chunk.js.map": "/capsule-admin-react/static/js/453.5b29c436.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.6f43c896.js"
+    "static/js/main.45be8e6e.js"
   ]
 }
