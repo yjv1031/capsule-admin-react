@@ -24,7 +24,7 @@
     "@emotion/styled": "^11.11.5",
     "@types/react": "18.2.73",
     "@types/react-dom": "18.2.23",
-    "typescript": "5.4.2"
+    "typescript": "3.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
