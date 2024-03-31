@@ -5,26 +5,14 @@ import { Tooltip } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { produce } from "immer";
 import ImageSaveAlert from "./ImageSaveAlert";
-
-interface ImageMasterType {
-    seq: number,
-    name: string,
-    useYn: string,
-    checked: boolean,
-    memberList: ImageMemberType[]
-};
-
-interface ImageMemberType {
-    seq: number,
-    order: number,
-    imgUrl: string
-}
+import { ImageMasterType } from "../../module/interfaceModule";
 
 function ImageList() {
   const { setCurrentMenuKey, commonAjaxWrapper } = commonStateStore();
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [rows, setRows] = useState<ImageMasterType[]>([]);
   const [alertFlag, setAlertFlag] = useState<boolean>(false);
+  const [masterSeq, setMasterSeq] = useState<number>(-1);
 
   const searchKeywordChangehandler = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
@@ -32,6 +20,7 @@ function ImageList() {
 
   useEffect(() => {
       setCurrentMenuKey(2);
+      trySearchList();
   },[]);
   
   const columns: GridColDef<ImageMasterType>[] = [
@@ -97,9 +86,9 @@ function ImageList() {
         editable: false,
         sortable: false,
         filterable: false,
-        renderCell: (params) => {
+        renderCell: (param) => {
             return (
-                <button className="grid_image_thumnai_button">수정시 클릭</button>
+                <button className="grid_image_thumnai_button" onClick={() => {setMasterSeq(param.row.seq); setAlertFlag(true);}}>수정시 클릭</button>
             );
         }
     },
@@ -166,7 +155,7 @@ function ImageList() {
         <div className="tabArea">
             <div className="tab-content" id="tabC01">
                 <div className="grid_btn_right_wrap">
-                    <a className="btn-blue" onClick={() => {setAlertFlag(true);}}>추가하기</a>
+                    <a className="btn-blue" onClick={() => {setMasterSeq(-1); setAlertFlag(true);}}>추가하기</a>
                     <a className="btn-blue">삭제하기</a>
                 </div>
                 <div className="grid_area" style={{height: '600px'}}>
@@ -193,7 +182,7 @@ function ImageList() {
             </div>
         </div>
         {
-            alertFlag ? (<ImageSaveAlert setAlertFlag={setAlertFlag} masterSeq={-1}></ImageSaveAlert>) : ''
+            alertFlag ? (<ImageSaveAlert setAlertFlag={setAlertFlag} masterSeq={masterSeq} trySearchList={trySearchList}></ImageSaveAlert>) : ''
         }
     </>
   );

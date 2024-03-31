@@ -6,7 +6,7 @@ export interface commonStateInterface {
   currentMenuKey: number,
   setCurrentMenuKey: (param: number) => void,
   setIsLoading: (param :boolean) => void,
-  commonAjaxWrapper: (method: string, url: string, data?: any) => any
+  commonAjaxWrapper: (method: string, url: string, data?: any, contentType?: string) => any
 }
 
 
@@ -19,9 +19,14 @@ export const commonStateStore =  create<commonStateInterface>((set) => ({
   setIsLoading:(param: boolean) => {
     set(() => ({isLoading: param}));
   },
-  async commonAjaxWrapper(method, url, data) {
+  async commonAjaxWrapper(method, url, data, contentType) {
     set(() => ({isLoading: true}));
-    const res = await commonAxios(method, url, data);
+    let res = null;
+    if(contentType) {
+      res = await commonAxios(method, url, data, contentType);
+    } else {
+      res = await commonAxios(method, url, data);
+    }
     set(() => ({isLoading: false}));
     return res;
   },

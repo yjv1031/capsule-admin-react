@@ -1,11 +1,7 @@
 import React, { useState, ChangeEvent, KeyboardEvent } from 'react';
 import { commonStateStore } from '../../store/commonStore';
 import { produce } from 'immer';
-
-interface userLoginInputInterface {
-  loginId: string,
-  loginPwd: string
-}
+import { userLoginInputInterface } from '../../module/interfaceModule';
 
 function LoginMain() {
   const [userLoginState, setUserLoginState] = useState<userLoginInputInterface>({loginId: '', loginPwd: ''});

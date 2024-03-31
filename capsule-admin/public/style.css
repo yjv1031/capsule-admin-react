@@ -116,3 +116,10 @@ html, body, #root, button, .css-qcqlck-MuiDataGrid-root {
   border:1px solid #e6e7e8; 
   /* margin-top:10px; */
 }
+
+.srch_wrap .btn-srch.btn-input {
+  display: inline-block; 
+  height: 26px;
+  width: 70%;
+  line-height: 1;
+}

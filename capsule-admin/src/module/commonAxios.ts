@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 const BACK_END_URL = process.env.REACT_APP_BACK_END_URL;
 
 const commonAxios = async (
-  method: string, url: string, data?: any) => {
+  method: string, url: string, data?: any, contentType?: string) => {
   const headers: any = {};
   
   //퍼블릭한 서비스가 아닌경우 토큰포함
@@ -18,6 +18,9 @@ const commonAxios = async (
   }
 
   try {
+    if(contentType) {
+      headers['Content-Type'] = contentType;
+    }
     const res = await axios({
       method: method,
       url: `${BACK_END_URL}${url}`,
@@ -45,6 +48,10 @@ const commonAxios = async (
               // 헤더에 새로운 액세스 토큰 추가
               headers['Authorization'] = `Bearer ${serverToken.accessToken}`;
   
+              if(contentType) {
+                headers['Content-Type'] = contentType;
+              }
+              
               // 재시도
               const retryResponse = await axios({
                 method: method,
