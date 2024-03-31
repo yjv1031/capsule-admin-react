@@ -193,7 +193,7 @@ function ImageList() {
             </div>
         </div>
         {
-            alertFlag ? (<ImageSaveAlert setAlertFlag={setAlertFlag}></ImageSaveAlert>) : ''
+            alertFlag ? (<ImageSaveAlert setAlertFlag={setAlertFlag} masterSeq={-1}></ImageSaveAlert>) : ''
         }
     </>
   );

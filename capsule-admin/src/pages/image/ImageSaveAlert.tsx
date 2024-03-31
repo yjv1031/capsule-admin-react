@@ -21,12 +21,14 @@ interface ImageMemberType {
 }
 
 interface ImageSaveAlertPropsType {
+    masterSeq: number
     setAlertFlag: (param: boolean) => void
 }
 
 function ImageSaveAlert(props: ImageSaveAlertPropsType) {
   const { commonAjaxWrapper } = commonStateStore();
   const setAlertFlag = props.setAlertFlag;
+  const masterSeq = props.masterSeq;
 
   useEffect(() => {
   }, []);
@@ -50,7 +52,7 @@ function ImageSaveAlert(props: ImageSaveAlertPropsType) {
                         
                     </ul>
                     <div className="btnArea">
-                        <button className="btn-srch">Search</button>
+                        <button className="btn-srch">그룹 저장</button>
                     </div>
                 </div>
                 <div className="grid_btn_right_wrap">
@@ -65,7 +67,7 @@ function ImageSaveAlert(props: ImageSaveAlertPropsType) {
             </div>
             <div className="popup_footer">
                 <div className="btn_wrap">
-                    <a className="btn-blue">Save</a>
+                    {/* <a className="btn-blue">Save</a> */}
                     <a className="btn-gray" onClick={() => { setAlertFlag(false); }}>Close</a>
                 </div>
             </div>
