@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { commonStateStore } from "../../store/commonStore";
-import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
 import { Tooltip } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { produce } from "immer";
@@ -9,18 +9,67 @@ import { ImageMasterType } from "../../module/interfaceModule";
 
 function ImageList() {
   const { setCurrentMenuKey, commonAjaxWrapper } = commonStateStore();
+
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [rows, setRows] = useState<ImageMasterType[]>([]);
-  const [alertFlag, setAlertFlag] = useState<boolean>(false);
-  const [masterSeq, setMasterSeq] = useState<number>(-1);
+  const [totalRows, setTotalRows] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
 
   const searchKeywordChangehandler = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchKeyword(e.target.value);
   }
 
+  const trySearchList = async(page: number) => {
+    const param = {};
+    const data = await commonAjaxWrapper('get', `/image?page=${page + 1}&size=${paginationModel.pageSize}`, param);
+    if(data) {
+        const convertRows = data.content.map((item: ImageMasterType) => {
+            return {
+                ...item,
+                checked: false
+            }
+        });
+        setRows(convertRows);
+        setTotalRows(data.totalElements);
+    }
+  }
+
+  const handlePageChange = (model: GridPaginationModel) => {
+    setPaginationModel((prev) => ({...prev, page: model.page}));
+    trySearchList(model.page);
+  }
+
+  const tryDeleteList = async() => {
+    const deleteList = rows.filter((item) => {
+        return item.checked == true;
+    }).map((item) => {
+        return {
+            seq: item.seq
+        }
+    });
+
+    const param = {
+        deleteList : deleteList
+    };
+
+    if(param.deleteList.length == 0) {
+        alert('삭제할 그룹을 체크하여 주십시오');
+        return;
+    }
+
+    const data = await commonAjaxWrapper('delete', `/image`, param);
+    if(data) {
+        alert('이미지 그룹을 삭제하였습니다');
+    }
+    trySearchList(paginationModel.page);
+  }
+
   useEffect(() => {
       setCurrentMenuKey(2);
-      trySearchList();
+      trySearchList(paginationModel.page);
   },[]);
   
   const columns: GridColDef<ImageMasterType>[] = [
@@ -119,22 +168,8 @@ function ImageList() {
     },
   ];
 
-  const trySearchList = async() => {
-    const param = {};
-    const data = await commonAjaxWrapper('get', `/image?page=${1}&size=${10}`, param);
-    if(data) {
-        const convertRows = data.content.map((item: ImageMasterType) => {
-            return {
-                ...item,
-                checked: false
-            }
-        });
-        setRows(convertRows);
-    }
-  }
-
-  useEffect(() => {
-  }, []);
+  const [alertFlag, setAlertFlag] = useState<boolean>(false);
+  const [masterSeq, setMasterSeq] = useState<number>(-1);
 
   return (
     <>
@@ -149,40 +184,31 @@ function ImageList() {
             </ul>
             <div className="btnArea">
                 <button className="btn-reset">Reset</button>
-                <button className="btn-srch" onClick={trySearchList}>Search</button>
+                <button className="btn-srch" onClick={() => {trySearchList(1);}}>Search</button>
             </div>
         </div>
         <div className="tabArea">
             <div className="tab-content" id="tabC01">
                 <div className="grid_btn_right_wrap">
                     <a className="btn-blue" onClick={() => {setMasterSeq(-1); setAlertFlag(true);}}>추가하기</a>
-                    <a className="btn-blue">삭제하기</a>
+                    <a className="btn-blue" onClick={() => {tryDeleteList();}}>삭제하기</a>
                 </div>
                 <div className="grid_area" style={{height: '600px'}}>
                     <DataGrid
                         rows={rows}
                         columns={columns}
                         getRowId={(row)=>(row.seq)}
-                        // initialState={{
-                        //     pagination: {
-                        //         paginationModel: {
-                        //         pageSize: 8,
-                        //         },
-                        //     },
-                        // }}
-                        // pageSizeOptions={[5]}
-                        // disableRowSelectionOnClick
-                        // checkboxSelection
-                        // rowSelectionModel={selectionModel}
-                        // onRowSelectionModelChange={(newSelection) => {
-                        //     setSelectionModel(newSelection);
-                        // }}
+                        rowCount={totalRows}
+                        pageSizeOptions={[paginationModel.pageSize]}
+                        paginationModel={paginationModel}
+                        onPaginationModelChange={handlePageChange}
+                        paginationMode="server"
                     />
                 </div>
             </div>
         </div>
         {
-            alertFlag ? (<ImageSaveAlert setAlertFlag={setAlertFlag} masterSeq={masterSeq} trySearchList={trySearchList}></ImageSaveAlert>) : ''
+            alertFlag ? (<ImageSaveAlert setAlertFlag={setAlertFlag} masterSeq={masterSeq} trySearchList={()=>{trySearchList(paginationModel.page);}}></ImageSaveAlert>) : ''
         }
     </>
   );
