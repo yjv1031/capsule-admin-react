@@ -114,14 +114,26 @@ function ImageSaveAlert(props: ImageSaveAlertPropsType) {
       } else if (!['image/jpeg', 'image/png'].includes(file.type)) {
         alert('이미지 파일은 JPG 또는 PNG 형식이어야 합니다.');
       } else {
-        countRef.current += 1;
-        const newFile: ImageNewMemberType = {
-            sortOrder: null,
-            seq: countRef.current,
-            file: file,
-            imgUrl: URL.createObjectURL(file)
-        }
-        setNewSelectedFiles((prev) => ([...prev, newFile]));
+        const url = URL.createObjectURL(file);
+        const img = new Image();
+        img.src = url;
+        img.onload = (event) => {
+            const width = img.width;
+            const height = img.height;
+            if(width != 800 || height != 450) {
+                alert('가로 800 세로 450인 이미지를 사용하여 주십시오');
+                return;
+            }
+
+            countRef.current += 1;
+            const newFile: ImageNewMemberType = {
+                sortOrder: null,
+                seq: countRef.current,
+                file: file,
+                imgUrl: url
+            }
+            setNewSelectedFiles((prev) => ([...prev, newFile]));
+        };
       }
     }
   };
