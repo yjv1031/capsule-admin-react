@@ -78,9 +78,16 @@ html, body, #root, button, .css-qcqlck-MuiDataGrid-root {
   border-radius: 7px;
 }
 
-.grid_image_thumnai_button {
+.grid_image_update_button {
   width: 100%;
-  background-color: aqua;
+  color: #fff;
+  background-color: rgb(60, 92, 92);
+}
+
+.grid_image_thumnail_button {
+  width: 100%;
+  color: #fff;
+  background-color: rgb(31, 82, 82);
 }
 
 /* 딤 처리 스타일 */
@@ -122,4 +129,12 @@ html, body, #root, button, .css-qcqlck-MuiDataGrid-root {
   height: 26px;
   width: 70%;
   line-height: 1;
+}
+
+.MuiDataGrid-row.grid_checked_row {
+  background-color: rgb(253, 171, 171) !important;
+}
+
+.MuiDataGrid-row.grid_checked_row.Mui-selected {
+  background-color: rgb(250, 138, 138) !important;
 }
