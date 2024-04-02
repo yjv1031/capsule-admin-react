@@ -1,11 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { commonStateStore } from "../../store/commonStore";
-import { DataGrid, GridColDef, GridPaginationModel } from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridEventListener, GridPaginationModel } from "@mui/x-data-grid";
 import { Tooltip } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { produce } from "immer";
 import ImageSaveAlert from "./ImageSaveAlert";
 import { ImageMasterType } from "../../module/interfaceModule";
+import { OtherHouses } from "@mui/icons-material";
 
 function ImageList() {
   const { setCurrentMenuKey, commonAjaxWrapper } = commonStateStore();
@@ -137,7 +138,7 @@ function ImageList() {
         filterable: false,
         renderCell: (param) => {
             return (
-                <button className="grid_image_thumnai_button" onClick={() => {setMasterSeq(param.row.seq); setAlertFlag(true);}}>수정시 클릭</button>
+                <button className="grid_image_update_button" onClick={() => {setMasterSeq(param.row.seq); setAlertFlag(true);}}>수정시 클릭</button>
             );
         }
     },
@@ -154,14 +155,12 @@ function ImageList() {
                     <div>
                         {
                             params.row.memberList.map(item => (
-                                <>
-                                    <img src={item.imgUrl} alt="Preview" width="100" />
-                                </>
+                                <img key={item.seq} src={item.imgUrl} alt="Preview" width="100" />
                             ))
                         }
                     </div>
                 } arrow placement="right">
-                    <button className="grid_image_thumnai_button">이미지 미리보기</button>
+                    <button className="grid_image_thumnail_button">이미지 미리보기</button>
                 </Tooltip>
             );
         }
@@ -203,6 +202,7 @@ function ImageList() {
                         paginationModel={paginationModel}
                         onPaginationModelChange={handlePageChange}
                         paginationMode="server"
+                        getRowClassName={(params) => {return params.row.checked ? 'grid_checked_row': ''}}
                     />
                 </div>
             </div>
