@@ -183,7 +183,7 @@ function ImageList() {
             </ul>
             <div className="btnArea">
                 <button className="btn-reset">Reset</button>
-                <button className="btn-srch" onClick={() => {trySearchList(1);}}>Search</button>
+                <button className="btn-srch" onClick={() => {trySearchList(0);}}>Search</button>
             </div>
         </div>
         <div className="tabArea">
