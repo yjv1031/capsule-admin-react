@@ -49,3 +49,46 @@ export interface ImageCardSaveParameterType {
   updateCard: ImageCardParameterType[],
   createCard: ImageCardParameterType[],
 }
+
+export interface ProductInfoType {
+  seq: number,
+  name: string,
+  useYn: string,
+  gradeNum: number,
+  amount: number,
+  checked: boolean,
+  imageList: ImageMemberType[]
+};
+
+export interface ProductSaveAlertPropsType {
+  masterSeq: number
+  setAlertFlag: (param: boolean) => void
+  trySearchList: () => void
+}
+
+export interface ProductSaveStateType {
+  seq: number | null,
+  name: string,
+  gradeNum: number,
+  amount: number,
+  imageSeq: number | null,
+  imageList: ImageMemberType[]
+};
+
+export interface ProductSaveImageParamType {
+  imageSeq: number | null,
+  imageList: ImageMemberType[]
+};
+
+export interface ProductSaveImageGridParamType {
+  setProductSaveParamImageSeq: (imageSeq: number | null) => void,
+  setProductSaveParamImageList: (imageList: ImageMemberType[]) => void
+};
+
+export interface ProductSaveApiParameterType {
+  seq: number | null,
+  name: string,
+  gradeNum: number,
+  amount: number,
+  imageSeq: number | null,
+};
