@@ -57,8 +57,15 @@ export interface ProductInfoType {
   gradeNum: number,
   amount: number,
   checked: boolean,
+  imgInfo: imgMstInfoType | null,
   imageList: ImageMemberType[]
 };
+
+export interface imgMstInfoType {
+  seq: number,
+  name: string,
+  useYn: string,
+}
 
 export interface ProductSaveAlertPropsType {
   masterSeq: number
@@ -72,17 +79,18 @@ export interface ProductSaveStateType {
   gradeNum: number,
   amount: number,
   imageSeq: number | null,
-  imageList: ImageMemberType[]
+  imageList: ImageMemberType[],
+  imageMstName: string| null
 };
 
 export interface ProductSaveImageParamType {
   imageSeq: number | null,
-  imageList: ImageMemberType[]
+  imageList: ImageMemberType[],
+  imageMstName: string | null
 };
 
 export interface ProductSaveImageGridParamType {
-  setProductSaveParamImageSeq: (imageSeq: number | null) => void,
-  setProductSaveParamImageList: (imageList: ImageMemberType[]) => void
+  setProductSaveImageParam: (param: ProductSaveImageParamType) => void,
 };
 
 export interface ProductSaveApiParameterType {

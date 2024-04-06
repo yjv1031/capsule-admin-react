@@ -3,12 +3,11 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { commonStateStore } from "../../store/commonStore";
 import { Checkbox, Tooltip } from "@mui/material";
 import { produce } from "immer";
-import { ProductSaveImageGridParamType } from "../../module/interfaceModule";
+import { ProductSaveImageGridParamType, ProductSaveImageParamType } from "../../module/interfaceModule";
 
 
 function ProductSaveAlertImageGrid(props: ProductSaveImageGridParamType) {
-    const setProductSaveParamImageSeq = props.setProductSaveParamImageSeq;
-    const setProductSaveParamImageList = props.setProductSaveParamImageList;
+    const setProductSaveImageParam = props.setProductSaveImageParam;
 
     const { setCurrentMenuKey, commonAjaxWrapper } = commonStateStore();
 
@@ -94,8 +93,12 @@ function ProductSaveAlertImageGrid(props: ProductSaveImageGridParamType) {
                                             checked: false
                                         };
                                     });
-                                    setProductSaveParamImageSeq(null);
-                                    setProductSaveParamImageList([]);
+                                    const paramRow: ProductSaveImageParamType = {
+                                        imageList: [],
+                                        imageMstName: '',
+                                        imageSeq: null
+                                    }
+                                    setProductSaveImageParam(paramRow);
                                 } else {
                                     newRows = rows.map((item) => {
                                         return {
@@ -103,8 +106,12 @@ function ProductSaveAlertImageGrid(props: ProductSaveImageGridParamType) {
                                             checked: item.seq == param.row.seq
                                         };
                                     });
-                                    setProductSaveParamImageSeq(param.row.seq);
-                                    setProductSaveParamImageList(param.row.memberList);
+                                    const paramRow: ProductSaveImageParamType = {
+                                        imageList: param.row.memberList,
+                                        imageMstName: param.row.name,
+                                        imageSeq: param.row.seq
+                                    }
+                                    setProductSaveImageParam(paramRow);
                                 }
                             }
                             setRows(newRows);

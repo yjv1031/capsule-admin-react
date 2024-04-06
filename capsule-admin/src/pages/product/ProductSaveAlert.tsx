@@ -16,11 +16,13 @@ function ProductSaveAlert(props: ProductSaveAlertPropsType) {
         amount: 10000,
         gradeNum: 0,
         imageSeq: null,
-        imageList: []
+        imageList: [],
+        imageMstName: ''
     });
     const [productSaveImageParam, setProductSaveImageParam] = useState<ProductSaveImageParamType>({
         imageSeq: null,
-        imageList: []
+        imageList: [],
+        imageMstName: '',
     });
     
 
@@ -47,6 +49,8 @@ function ProductSaveAlert(props: ProductSaveAlertPropsType) {
             setProductSaveState((prev) => ({...prev, imageSeq: Number(value)}));
         } else if (paramName == 'imageList') {
             setProductSaveState((prev) => ({...prev, imageList: value}));
+        } else if (paramName == 'imageMstName') {
+            setProductSaveState((prev) => ({...prev, imageMstName: value}));
         }
     }
 
@@ -54,8 +58,17 @@ function ProductSaveAlert(props: ProductSaveAlertPropsType) {
         if(masterSeq != -1) {
             const res = await commonAjaxWrapper('get', `/product/${masterSeq}`, {});
             if(res) {
+                setProductSaveState({
+                    seq: res.seq,
+                    name: res.name,
+                    gradeNum: res.gradeNum,
+                    amount: res.amount,
+                    imageSeq: res.imgInfo ? res.imgInfo.seq : null,
+                    imageMstName: res.imgInfo ? res.imgInfo.name : '',
+                    imageList: res.imageList
+                });
             } else {
-                alert('잘못된 이미지 그룹입니다');
+                alert('잘못된 상품 그룹입니다');
                 setAlertFlag(false);
             }
         }
@@ -68,6 +81,7 @@ function ProductSaveAlert(props: ProductSaveAlertPropsType) {
         }
         handleSetProductSaveParam('imageSeq', productSaveImageParam.imageSeq);
         handleSetProductSaveParam('imageList', productSaveImageParam.imageList);
+        handleSetProductSaveParam('imageMstName', productSaveImageParam.imageMstName);
     }
 
     const saveProduct = async() => {
@@ -130,7 +144,7 @@ function ProductSaveAlert(props: ProductSaveAlertPropsType) {
                                 <label>등급</label>
                                 <div className="type-selectbox" style={{width: '50%'}}>
                                     <select className="inp-selectbox" value={productSaveState.gradeNum} onChange={(e : ChangeEvent<HTMLSelectElement>) => { handleSetProductSaveParam('gradeNum', e.target.value); }}>
-                                        <option value='0' selected>선택안함</option>
+                                        <option value='0'>선택안함</option>
                                         <option value='1'>1등급</option>
                                         <option value='2'>2등급</option>
                                         <option value='3'>3등급</option>
@@ -138,7 +152,7 @@ function ProductSaveAlert(props: ProductSaveAlertPropsType) {
                                 </div>
                             </li>
                             <li>
-                                <label>이미지 변경</label>
+                                <label>이미지</label>
                                 <Tooltip title={
                                     <div>
                                         {
@@ -148,11 +162,12 @@ function ProductSaveAlert(props: ProductSaveAlertPropsType) {
                                         }
                                     </div>
                                 } arrow placement="right">
-                                    <button className="btn-srch btn-input" onClick={() => {changeImage();}}>이미지 변경</button>
+                                    <button className="btn-srch btn-input">{productSaveState.imageMstName ? productSaveState.imageMstName : '이미지없음'}</button>
                                 </Tooltip>
                             </li>
                         </ul>
                         <div className="btnArea">
+                        <button className="btn-srch" onClick={() => {changeImage();}}>이미지 임시</button>
                             <button className="btn-srch" onClick={() => {saveProduct();}}>상품 저장</button>
                         </div>
                     </div>
@@ -163,9 +178,7 @@ function ProductSaveAlert(props: ProductSaveAlertPropsType) {
                         <a className="btn-blue">Button</a>
                     </div> */}
                     <div className="popup_grid_area">
-                        <ProductSaveAlertImageGrid 
-                            setProductSaveParamImageSeq={(imageSeq: number | null) => {setProductSaveImageParam((prev) => ({...prev, imageSeq: imageSeq}));}}
-                            setProductSaveParamImageList={(imageList: ImageMemberType[]) => {setProductSaveImageParam((prev) => ({...prev, imageList: imageList}));}}>
+                        <ProductSaveAlertImageGrid setProductSaveImageParam={setProductSaveImageParam}>
                         </ProductSaveAlertImageGrid>
                     </div>
                 </div>

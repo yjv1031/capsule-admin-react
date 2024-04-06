@@ -129,6 +129,19 @@ function ProductMain() {
             }
         },
         {
+            field: 'imgGroup',
+            headerName: '이미지 그룹 명',
+            description: '',
+            sortable: false,
+            filterable: false,
+            width: 100,
+            renderCell: (param) => {
+                return (
+                    <p>{param.row.imgInfo ? param.row.imgInfo.name : ''}</p>
+                );
+            }
+        },
+        {
             field: 'imageView',
             headerName: '상품 이미지 미리보기',
             width: 150,
@@ -137,17 +150,23 @@ function ProductMain() {
             filterable: false,
             renderCell: (params) => {
                 return (
-                    <Tooltip title={
-                        <div>
-                            {
-                                params.row.imageList.map(item => (
-                                    <img key={item.seq} src={item.imgUrl} alt="Preview" width="100" />
-                                ))
-                            }
-                        </div>
-                    } arrow placement="right">
-                        <button className="grid_image_thumnail_button">이미지 미리보기</button>
-                    </Tooltip>
+                    <>
+                        {
+                            params.row.imgInfo ? 
+                                <Tooltip title={
+                                    <div>
+                                        {
+                                            params.row.imageList.map(item => (
+                                                <img key={`${params.row.seq}_${item.seq}`} src={item.imgUrl} alt="Preview" width="100" />
+                                            ))
+                                        }
+                                    </div>
+                                } arrow placement="right">
+                                    <button className="grid_image_thumnail_button">이미지 미리보기</button>
+                                </Tooltip> : 
+                                <></>
+                        }
+                    </>
                 );
             }
         },
@@ -162,7 +181,7 @@ function ProductMain() {
                         <label>등급 검색</label>
                         <div className="type-selectbox" style={{width: '50%'}}>
                             <select className="inp-selectbox" value={paramObject.gradeNum} onChange={(e : ChangeEvent<HTMLSelectElement>) => { changeParamObject('gradeNum', e.target.value); }}>
-                                <option value='' selected>선택안함</option>
+                                <option value=''>선택안함</option>
                                 <option value='1'>1등급</option>
                                 <option value='2'>2등급</option>
                                 <option value='3'>3등급</option>
