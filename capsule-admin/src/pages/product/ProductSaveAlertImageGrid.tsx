@@ -9,7 +9,7 @@ import { ProductSaveImageGridParamType, ProductSaveImageParamType } from "../../
 function ProductSaveAlertImageGrid(props: ProductSaveImageGridParamType) {
     const setProductSaveImageParam = props.setProductSaveImageParam;
 
-    const { setCurrentMenuKey, commonAjaxWrapper } = commonStateStore();
+    const { commonAjaxWrapper } = commonStateStore();
 
     const [searchKeyword, setSearchKeyword] = useState<string>('');
     const [rows, setRows] = useState<any[]>([]);
@@ -69,7 +69,6 @@ function ProductSaveAlertImageGrid(props: ProductSaveImageGridParamType) {
     }
   
     useEffect(() => {
-        setCurrentMenuKey(2);
         trySearchList(paginationModel.page);
     },[]);
     

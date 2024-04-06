@@ -10,8 +10,9 @@ import { OtherHouses } from "@mui/icons-material";
 
 function ImageList() {
   const { setCurrentMenuKey, commonAjaxWrapper } = commonStateStore();
-
-  const [searchKeyword, setSearchKeyword] = useState<string>('');
+  const [paramObject, setParamObject] = useState({
+    name: ''
+  });
   const [rows, setRows] = useState<ImageMasterType[]>([]);
   const [totalRows, setTotalRows] = useState(0);
   const [paginationModel, setPaginationModel] = useState({
@@ -19,13 +20,21 @@ function ImageList() {
     pageSize: 10,
   });
 
-  const searchKeywordChangehandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchKeyword(e.target.value);
+  const changeParamObject = (paramName: string, value: any) => {
+    if(paramName === 'name'){
+        setParamObject((prev) => ({...prev, name: value}));
+    }
+  }
+
+  const resetCondition = () => {
+    setParamObject({
+        name: ''
+    });
   }
 
   const trySearchList = async(page: number) => {
     const param = {};
-    const data = await commonAjaxWrapper('get', `/image?page=${page + 1}&size=${paginationModel.pageSize}`, param);
+    const data = await commonAjaxWrapper('get', `/image?name=${paramObject.name}&page=${page + 1}&size=${paginationModel.pageSize}`, param);
     if(data) {
         const convertRows = data.content.map((item: ImageMasterType) => {
             return {
@@ -112,14 +121,14 @@ function ImageList() {
         sortable: false,
         filterable: false,
     },
-    {
-        field: 'useYn',
-        headerName: '활성화 여부',
-        width: 100,
-        editable: false,
-        sortable: false,
-        filterable: false,
-    },
+    // {
+    //     field: 'useYn',
+    //     headerName: '활성화 여부',
+    //     width: 100,
+    //     editable: false,
+    //     sortable: false,
+    //     filterable: false,
+    // },
     {
         field: 'fullName',
         headerName: '이미지 개수',
@@ -177,12 +186,12 @@ function ImageList() {
             <ul>
                 <li>
                     <label>이미지 그룹 명</label>
-                    <input className="inp-text" type="text" placeholder="기본입력필드" maxLength={20}
-                    value={searchKeyword} onChange={searchKeywordChangehandler}/>
+                    <input className="inp-text" type="text" placeholder="" maxLength={20}
+                        value={paramObject.name} onChange={(e : ChangeEvent<HTMLInputElement>) => { changeParamObject('name', e.target.value); }}/>
                 </li>
             </ul>
             <div className="btnArea">
-                <button className="btn-reset">Reset</button>
+                <button className="btn-reset" onClick={resetCondition}>Reset</button>
                 <button className="btn-srch" onClick={() => {trySearchList(0);}}>Search</button>
             </div>
         </div>
